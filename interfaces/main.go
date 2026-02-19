@@ -9,7 +9,7 @@ type Endereco struct {
 	Estado     string
 }
 
-// Só pode passar apenas métodos para implementar a interface basta ter o mesmo métodos
+// basta ter os mesmos métodos para implementar uma interface — não precisa declarar explicitamente
 type Pessoa interface {
 	Desativar()
 }
