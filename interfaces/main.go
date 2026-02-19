@@ -9,11 +9,20 @@ type Endereco struct {
 	Estado     string
 }
 
+// Só pode passar apenas métodos para implementar a interface basta ter o mesmo métodos
+type Pessoa interface {
+	Desativar()
+}
+
 type Client struct {
 	Nome  string
 	Idade int
 	Ativo bool
 	Endereco
+}
+
+func Desativacao(pessoa Pessoa) {
+	pessoa.Desativar()
 }
 
 func main() {
@@ -23,11 +32,8 @@ func main() {
 		Ativo: true,
 	}
 
-	iza.Cidade = "São Paulo"
+	Desativacao(iza)
 
-	fmt.Printf("Nome: %s, Idade: %d, Ativo: %t, Cidade: %s\n", iza.Nome, iza.Idade, iza.Ativo, iza.Cidade)
-
-	iza.Desativar()
 }
 
 func (c Client) Desativar() { // só lê → valor
