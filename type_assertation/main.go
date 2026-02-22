@@ -9,7 +9,7 @@ func main() {
 		res, ok := minhaVar.(int)
 		println(res)
 		println(ok)
-	*/0,,,,,,,,,,,,,,,,,,
+	*/
 	tipos("Iza")
 	tipos(20)
 	tipos(true)
