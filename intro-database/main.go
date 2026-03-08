@@ -35,28 +35,46 @@ func main() {
 		panic(err)
 	}
 
-	product.Price = 2500
+	product.Price = 2540
 	err = updateProduct(db, product)
 	if err != nil {
 		panic(err)
 	}
 
-	p, err := selectProduct(db, product.ID)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("Product: %s, Price: %.2f\n", p.Name, p.Price)
+	//p, err := selectProduct(db, product.ID)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//fmt.Printf("Product: %s, Price: %.2f\n", p.Name, p.Price)
 
 	fmt.Println("-----------------------")
+
 	products, err := selectProducts(db)
 	if err != nil {
 		panic(err)
 	}
+	listProducts(products)
 
-	for _, p := range products {
+	fmt.Println("-----------------------")
+
+	err = deleteProduct(db, product.ID)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func listProducts(Products []*Products) {
+	if len(Products) == 1 {
+		fmt.Printf("Product: %s, Price: %.2f\n", Products[0].Name, Products[0].Price)
+	}
+
+	for _, p := range Products {
 		fmt.Printf("Product: %s, Price: %.2f\n", p.Name, p.Price)
 	}
 }
+
+// Exec é utilizado para queries que não retornam resultados, como insert, update e delete
+// Query é utilizado para queries que retornam resultados, como select
 
 func insertProduct(db *sql.DB, p *Products) error {
 	stmt, err := db.Prepare("INSERT INTO products(id, name, price) VALUES(?, ?, ?)") // Prepara a query para inserção de um produto seguindo o padrão de segurança para evitar SQL Injection
@@ -125,4 +143,17 @@ func selectProducts(db *sql.DB) ([]*Products, error) {
 	}
 
 	return products, nil
+}
+
+func deleteProduct(db *sql.DB, id string) error {
+	stmt, err := db.Prepare("delete from products where id = ?")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(id)
+	if err != nil {
+		return err
+	}
+	return err
 }
