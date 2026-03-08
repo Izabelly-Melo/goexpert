@@ -30,18 +30,42 @@ func main() {
 	//}
 	//db.Create(&products)
 
-	p := Product{}
-	//db.First(&p, 1) // SELECT * FROM products WHERE id = 1
-	//fmt.Printf("Product: %+v\n", p)
+	/*
+		p := Product{}
+		//db.First(&p, 1) // SELECT * FROM products WHERE id = 1
+		//fmt.Printf("Product: %+v\n", p)
 
-	db.First(&p, "name = ?", "Tablet") // SELECT * FROM products WHERE name = 'Laptop'
-	fmt.Printf("Product: %+v\n", p)
+		db.First(&p, "name = ?", "Tablet") // SELECT * FROM products WHERE name = 'Laptop'
+		fmt.Printf("Product: %+v\n", p)
+
+		fmt.Println("_________________")
+
+		// select all products
+		products := []Product{}
+		db.Find(&products)
+		for _, p := range products {
+			fmt.Printf("Product: %+v\n", p)
+		}
+	*/
+
+	/*
+		products := []Product{}
+		db.Limit(2).Offset(2).Find(&products) // offset: pula os 2 primeiros registros, limit: limita a quantidade de registros retornados
+		for _, p := range products {
+			fmt.Printf("Product: %+v\n", p)
+		}
+
+	*/
+
+	//where
+	products := []Product{}
+	db.Where("price > ?", 300).Find(&products) // SELECT * FROM products WHERE price > 300
+	for _, p := range products {
+		fmt.Printf("Product: %+v\n", p)
+	}
 
 	fmt.Println("_________________")
-
-	// select all products
-	products := []Product{}
-	db.Find(&products)
+	db.Where("name LIKE ?", "%l%").Find(&products) // SELECT * FROM products WHERE name LIKE '%l%'
 	for _, p := range products {
 		fmt.Printf("Product: %+v\n", p)
 	}
