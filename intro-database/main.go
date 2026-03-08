@@ -46,6 +46,16 @@ func main() {
 		panic(err)
 	}
 	fmt.Printf("Product: %s, Price: %.2f\n", p.Name, p.Price)
+
+	fmt.Println("-----------------------")
+	products, err := selectProducts(db)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, p := range products {
+		fmt.Printf("Product: %s, Price: %.2f\n", p.Name, p.Price)
+	}
 }
 
 func insertProduct(db *sql.DB, p *Products) error {
@@ -95,4 +105,24 @@ func selectProduct(db *sql.DB, id string) (*Products, error) {
 	}
 
 	return p, nil
+}
+
+func selectProducts(db *sql.DB) ([]*Products, error) {
+	rows, err := db.Query("SELECT id, name, price FROM products")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	products := []*Products{}
+
+	for rows.Next() {
+		p := &Products{}
+		err = rows.Scan(&p.ID, &p.Name, &p.Price)
+		if err != nil {
+			return nil, err
+		}
+		products = append(products, p)
+	}
+
+	return products, nil
 }
