@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
@@ -39,6 +40,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	p, err := selectProduct(db, product.ID)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Product: %s, Price: %.2f\n", p.Name, p.Price)
 }
 
 func insertProduct(db *sql.DB, p *Products) error {
@@ -56,14 +63,36 @@ func insertProduct(db *sql.DB, p *Products) error {
 }
 
 func updateProduct(db *sql.DB, p *Products) error {
-	smtp, err := db.Prepare("UPDATE products SET name = ?, price = ? WHERE id = ?")
+	stmt, err := db.Prepare("UPDATE products SET name = ?, price = ? WHERE id = ?")
 	if err != nil {
 		return err
 	}
-	defer smtp.Close()
-	_, err = smtp.Exec(p.Name, p.Price, p.ID)
+	defer stmt.Close()
+	_, err = stmt.Exec(p.Name, p.Price, p.ID)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func selectProduct(db *sql.DB, id string) (*Products, error) {
+	stmt, err := db.Prepare("SELECT id, name, price FROM products WHERE id = ?")
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	p := &Products{} // pontando o endereço de memória da struct para receber os dados retornados da query
+
+	// queryrowcontext é utilizado para passar o contexto da aplicação, como tempo de execução, cancelamento, etc.
+	// Ele é recomendado para evitar que a aplicação fique bloqueada em uma query que demora muito para ser executada.
+	//err = stmt.QueryRowContext(ctx, id).Scan(&p.ID, &p.Name, &p.Price)
+
+	// queryrow é utilizado para retornar apenas um registro, e o scan é utilizado para mapear os campos retornados para a struct
+	err = stmt.QueryRow(id).Scan(&p.ID, &p.Name, &p.Price)
+	if err != nil {
+		return nil, err
+	}
+
+	return p, nil
 }
