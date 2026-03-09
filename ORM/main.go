@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -58,28 +56,29 @@ func main() {
 	*/
 
 	/*
-		//where
-		products := []Product{}
-		db.Where("price > ?", 300).Find(&products) // SELECT * FROM products WHERE price > 300
-		for _, p := range products {
-			fmt.Printf("Product: %+v\n", p)
-		}
+			//where
+			products := []Product{}
+			db.Where("price > ?", 300).Find(&products) // SELECT * FROM products WHERE price > 300
+			for _, p := range products {
+				fmt.Printf("Product: %+v\n", p)
+			}
 
-		fmt.Println("_________________")
-		db.Where("name LIKE ?", "%l%").Find(&products) // SELECT * FROM products WHERE name LIKE '%l%'
-		for _, p := range products {
-			fmt.Printf("Product: %+v\n", p)
-		}
+			fmt.Println("_________________")
+			db.Where("name LIKE ?", "%l%").Find(&products) // SELECT * FROM products WHERE name LIKE '%l%'
+			for _, p := range products {
+				fmt.Printf("Product: %+v\n", p)
+			}
+
+		p := Product{}
+		db.First(&p, 1) // SELECT * FROM products WHERE id = 1
+		p.Price = 899.99
+		db.Save(&p) // UPDATE products SET price = 899.99 WHERE id = 1
+
+		p2 := Product{}
+		db.First(&p2, 1) // SELECT * FROM products WHERE id = 2
+		fmt.Printf("Product: %+v\n", p2)
+
+		db.Delete(&p2) // DELETE FROM products WHERE id = 2
 	*/
 
-	p := Product{}
-	db.First(&p, 1) // SELECT * FROM products WHERE id = 1
-	p.Price = 899.99
-	db.Save(&p) // UPDATE products SET price = 899.99 WHERE id = 1
-
-	p2 := Product{}
-	db.First(&p2, 1) // SELECT * FROM products WHERE id = 2
-	fmt.Printf("Product: %+v\n", p2)
-
-	db.Delete(&p2) // DELETE FROM products WHERE id = 2
 }
