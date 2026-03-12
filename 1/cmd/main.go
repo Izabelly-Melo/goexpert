@@ -3,7 +3,7 @@ package main
 import "github.com/Izabelly-Melo/goexpert/math"
 
 func main() {
-	soma := math.Math{A: 1, B: 10}
+	soma := math.NewMath(1, 23)
 
 	println(soma.Sum())
 }
