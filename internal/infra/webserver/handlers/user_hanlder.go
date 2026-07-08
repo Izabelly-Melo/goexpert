@@ -25,6 +25,17 @@ type Error struct {
 	Message string `json:"message"`
 }
 
+// CreateUser godoc
+// @Summary      Create a user
+// @Description  Create a new user
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        request body dto.CreateUserInput true "user request"
+// @Success      201
+// @Failure      400 {object} Error
+// @Failure      500 {object} Error
+// @Router       /users [post]
 func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user dto.CreateUserInput
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
@@ -50,6 +61,17 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
+// GetToken godoc
+// @Summary      Get a user JWT token
+// @Description  Get a user JWT token
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param        request body dto.GetTokenInput true "user credentials"
+// @Success      200 {object} dto.GetTokenOutput
+// @Failure      400 {object} Error
+// @Failure      401 {object} Error
+// @Router       /generate_token [post]
 func (h *UserHandler) GetToken(w http.ResponseWriter, r *http.Request) {
 	jwt := r.Context().Value("jwt").(*jwtauth.JWTAuth)
 	jwtExpiresIn := r.Context().Value("jwtExpiresIn").(int)

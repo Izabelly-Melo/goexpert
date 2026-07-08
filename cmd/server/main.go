@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/Izabelly-Melo/goexpert/api/configs"
+	_ "github.com/Izabelly-Melo/goexpert/api/docs"
 	"github.com/Izabelly-Melo/goexpert/api/internal/entity"
 	"github.com/Izabelly-Melo/goexpert/api/internal/infra/database"
 	"github.com/Izabelly-Melo/goexpert/api/internal/infra/webserver/handlers"
@@ -12,9 +13,28 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/jwtauth"
+	httpSwagger "github.com/swaggo/http-swagger"
 	"gorm.io/gorm"
 )
 
+// @title Goexpert API
+// @version 1.0
+// @description Product API with user authentication
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host localhost:8080
+// @BasePath /
+
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	configs, err := configs.LoadConfig(".")
 	if err != nil {
@@ -56,6 +76,10 @@ func main() {
 
 	r.Post("/users", userHandler.CreateUser)
 	r.Post("/generate_token", userHandler.GetToken)
+
+	r.Get("/docs/*", httpSwagger.Handler(
+		httpSwagger.URL("http://localhost:8080/docs/doc.json"),
+	))
 
 	http.ListenAndServe(":8080", r)
 }
